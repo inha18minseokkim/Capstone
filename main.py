@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from typing import Union
 
+from fastapi import FastAPI, Request, HTTPException
+from fastapi import Header
 app = FastAPI()
 
 
@@ -7,7 +9,18 @@ app = FastAPI()
 async def root():
     return {"message": "Hello World"}
 
-@app.get("/getRatio")
-async def getRatio():
-    return {}
+@app.get("/getRatio",status_code = 200)
+async def getRatio(request: Request):
+    #필요한 정보 : stklist, strategy
+    try:
+        stklist = request.headers['stklist']
+        print(stklist)
+    except:
+        raise HTTPException(status_code=422,detail="stklist Argument form not correct")
+    try:
+        strategy = int(request.headers['strategy'])
+        print(strategy)
+    except:
+        raise HTTPException(status_code=422,detail="strategy Argument form not correct")
+    return {"stklist" : stklist, "strategy" : strategy}
 
