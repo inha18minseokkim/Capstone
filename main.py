@@ -22,5 +22,7 @@ async def getRatio(request: Request):
         print(strategy)
     except:
         raise HTTPException(status_code=422,detail="strategy Argument form not correct")
+    #여기서 구현
+
     return {"stklist" : stklist, "strategy" : strategy}
 
