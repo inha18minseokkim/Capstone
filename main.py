@@ -2,8 +2,15 @@ from typing import Union
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi import Header
+import nest_asyncio
+import Start
+import StrategyLoop
+
 app = FastAPI()
 
+@app.on_event("startup")
+async def startup_event():
+    nest_asyncio.apply()
 
 @app.get("/")
 async def root():
@@ -22,7 +29,15 @@ async def getRatio(request: Request):
         print(strategy)
     except:
         raise HTTPException(status_code=422,detail="strategy Argument form not correct")
+    try:
+        period = int(request.headers['period'])
+        print(period)
+    except:
+        raise HTTPException(status_code=422,detail="period Argument form not correct")
     #여기서 구현
-
-    return {"stklist" : stklist, "strategy" : strategy}
+    starter = Start.Starter(stklist,strategy,period)
+    se = StrategyLoop.StrategyExecutor()
+    executor = se.bindStrategy(starter)
+    res = executor.process()
+    return res
 
