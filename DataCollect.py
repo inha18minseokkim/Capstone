@@ -20,6 +20,11 @@ class DataCollector:
         res = pd.concat([asyncio.run(self.getPrice(c)) for c in code],axis=1)
         res.columns = code
         return res
+    def getRtn(self, df: pd.DataFrame, gap: int):
+        rtn = ((df.shift(gap) - df) / df).dropna()
+        return rtn
+    def getRtnCorr(self, df : pd.DataFrame):
+        return df.corr()
     def getMarketCapList(self, code: list):
         res = pd.DataFrame([asyncio.run(self.getMarketCap(c)) for c in code]).T
         res.columns = code
@@ -27,7 +32,8 @@ class DataCollector:
 
 if __name__ == "__main__":
     dc = DataCollector()
-    print(dc.getPriceList(['055550','003550','009200','000990','031440']))
-    print(dc.getMarketCapList(['055550', '003550', '009200', '000990', '031440']))
-    print(asyncio.run(dc.getMarketCap('055550')))
-    print(asyncio.run(dc.getMarketCap('003550')))
+    print(dc.getRtn(dc.getPriceList(['055550','003550','009200','000990','031440']),30))
+    print(dc.getRtnCov(dc.getRtn(dc.getPriceList(['055550', '003550', '009200', '000990', '031440']), 30)))
+    #print(dc.getMarketCapList(['055550', '003550', '009200', '000990', '031440']))
+    #print(asyncio.run(dc.getMarketCap('055550')))
+    #print(asyncio.run(dc.getMarketCap('003550')))
