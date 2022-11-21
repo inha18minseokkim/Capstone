@@ -3,6 +3,8 @@ from typing import Union
 from fastapi import FastAPI, Request, HTTPException
 from fastapi import Header
 import nest_asyncio
+
+import JsonConverter
 import Start
 import StrategyLoop
 
@@ -39,5 +41,5 @@ async def getRatio(request: Request):
     se = StrategyLoop.StrategyExecutor()
     executor = se.bindStrategy(starter)
     res = executor.process()
+    res = JsonConverter.JsonConvert(res).rtnTo()
     return res
-
