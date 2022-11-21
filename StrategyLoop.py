@@ -1,7 +1,7 @@
 from enum import Enum
 
 import Start
-from Decide.Strategies import DefaultOptimizer
+from Decide.Strategies import DefaultOptimizer,BlackLitterman
 class Strategy(Enum):
     UserDefined = 0
     DefaultOptimizer = 1
@@ -20,4 +20,4 @@ class StrategyExecutor():
         if strategy == Strategy.DefaultOptimizer.value: # 1번 기본 최적화 알고리즘
             return DefaultOptimizer.DefaultOptimize(code,period)
         if strategy == Strategy.BlackLitterman.value: # 2번 블랙 리터만 모델
-            pass
+            return BlackLitterman.BlackLittermanStrategy(code,period)
