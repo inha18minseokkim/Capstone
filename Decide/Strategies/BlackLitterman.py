@@ -35,7 +35,10 @@ class BlackLittermanStrategy(Decide.Decider.DecisionMaker):
         ER = Pi * tau * self.rtncorr.dot(P.T).dot(inv(P.dot(tau * self.rtncorr).dot(P.T) + Omega).dot(Q - P.dot(Pi)))
         w_hat = inv(self.rtncorr).dot(ER)
         w_hat = pd.Series(w_hat / w_hat.sum(), index=self.code)
-        #print(w_hat)
+        print(w_hat,np.sum(w_hat))
+        w_hat -= np.min(w_hat)
+        w_hat /= np.sum(w_hat)
+        print(w_hat,np.sum(w_hat))
         return w_hat
     def process(self):
         ratio = self.dataprepro()
