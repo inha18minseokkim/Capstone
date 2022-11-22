@@ -25,7 +25,17 @@ class Booster:
     def loadCurModel(self):
         return lgb.Booster(model_file=MODELNAME)
 
-    def predict(self,code: str):
+    def getRank(self,code : list, prediction : np.ndarray):
+        res = {}
+        for i in range(len(code)):
+            cnt = 1
+            for j in range(len(prediction)):
+                if i == j: continue
+                if prediction[i] < prediction[j]: cnt+= 1
+            res[code[i]] = cnt
+        return res
+
+    def predict(self,code: list):
         dc = DataCollector()
         prices = dc.getPriceList(code)
         tmprice = prices.iloc[-60:]
@@ -34,7 +44,7 @@ class Booster:
         tmonthly = (tmprice - tmprice.shift(50)) / tmprice.shift(50)
         tmpsample = pd.concat([tdaily.iloc[-1], tweekly.iloc[-1], tmonthly.iloc[-1]], axis=1)
         tmpsample.columns = ["daily", "weekly", "monthly"]
-        return self.model.predict(tmpsample)
+        return self.getRank(code,self.model.predict(tmpsample))
 
 
     def loadDataSet(self, code):
