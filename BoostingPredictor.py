@@ -12,14 +12,20 @@ class Booster:
         return 5
     def __init__(self,isload = False):
         try:
-            if isload == True: raise Exception
-            self.model = self.loadCurModel(str)
+            if isload:
+                print("Create New Model")
+                raise Exception
+            print("Load Existing Model...")
+            self.model = self.loadCurModel()
+            print("Load Existing model Completed")
         except:
+            print("Create New Model")
             tmpcode = ['055550','003550','009200','000990','031440','005930','105560','042700']
             self.prices = self.loadDataSet(tmpcode)
             self.trainset,self.testset = self.manipulateDataSet(self.prices)
             self.model = self.train(self.trainset,self.testset)
             self.saveCurModel()
+            print("New Model Created Completely")
     def saveCurModel(self):
         self.model.save_model(MODELNAME)
     def loadCurModel(self):
@@ -85,5 +91,5 @@ class Booster:
         model = lgb.train(params, trainset, 1000, testset, verbose_eval=100, early_stopping_rounds=100)
         return model
 if __name__ == "__main__":
-    booster: Booster = Booster()
-    print(booster.predict(['055550','003550','009200']))
+    booster: Booster = Booster(False)
+    print(booster.predict(['055550','003550','009200','005930','024110']))
