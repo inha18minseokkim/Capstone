@@ -12,6 +12,8 @@ class DataCollector:
     async def getPrice(self, code: str):
         res = fdr.DataReader(code)['Close']
         return res
+    def getCodeList(self):
+        return fdr.StockListing("KRX").loc[:,'Code'].tolist()
 
     async def getMarketCap(self, code: str):
         return self.cap.loc[code]['Marcap']
@@ -32,8 +34,10 @@ class DataCollector:
 
 if __name__ == "__main__":
     dc = DataCollector()
-    print(dc.getRtn(dc.getPriceList(['055550','003550','009200','000990','031440']),30))
-    print(dc.getRtnCov(dc.getRtn(dc.getPriceList(['055550', '003550', '009200', '000990', '031440']), 30)))
+    #print(dc.getRtn(dc.getPriceList(['055550','003550','009200','000990','031440']),30))
+    #print(dc.getRtnCorr(dc.getRtn(dc.getPriceList(['055550', '003550', '009200', '000990', '031440']), 30)))
     #print(dc.getMarketCapList(['055550', '003550', '009200', '000990', '031440']))
     #print(asyncio.run(dc.getMarketCap('055550')))
     #print(asyncio.run(dc.getMarketCap('003550')))
+    #print(dc.getCodeList())
+    print(dc.getPriceList(dc.getCodeList()))
