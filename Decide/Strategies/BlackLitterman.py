@@ -19,7 +19,7 @@ class BlackLittermanStrategy(Decide.Decider.DecisionMaker):
         #print(np.sum(self.mktCap,axis=1))
         self.w_mkt = DataRefiner.getWMkt(self.mktCap)
     def calc_QP(self):
-        Q = np.array([0.02, 0.03, 0.01])
+        Q = np.array([1, 1, 1])
         P = np.ones([3, len(self.code)])
         return [Q,P]
     def dataprepro(self):
