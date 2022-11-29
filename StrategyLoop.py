@@ -1,12 +1,12 @@
 from enum import Enum
 
 import Start
-from Decide.Strategies import DefaultOptimizer,BlackLitterman
+from Decide.Strategies import DefaultOptimizer,BlackLitterman,BlackLittermanWithRegressor
 class Strategy(Enum):
     UserDefined = 0
     DefaultOptimizer = 1
     BlackLitterman = 2
-
+    BlackLittermanWithRegressor = 3
 class StrategyExecutor():
     def __init__(self):
         pass
@@ -21,3 +21,5 @@ class StrategyExecutor():
             return DefaultOptimizer.DefaultOptimize(code,period)
         if strategy == Strategy.BlackLitterman.value: # 2번 블랙 리터만 모델
             return BlackLitterman.BlackLittermanStrategy(code,period)
+        if strategy == Strategy.BlackLittermanWithRegressor:
+            return BlackLittermanWithRegressor(code,period)
