@@ -5,3 +5,4 @@ numpy
 scipy
 uvicorn
 nest_asyncio
+lightgbm
