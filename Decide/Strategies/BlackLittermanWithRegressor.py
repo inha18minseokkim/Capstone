@@ -5,10 +5,17 @@ import DataCollect
 import DataRefiner
 import Decide
 from Decide.Strategies.BlackLitterman import BlackLittermanStrategy
+from PredictModel.BoostingRegrssor import BoostRegressor
+
 
 class BlackLittermanStrategyWithRegressor(BlackLittermanStrategy):
     def calc_QP(self):
-        Q = np.array([0.07669642, 0.09424969, 0.18199817, 0.12835284, -0.02027411, 0.13328767, 0.10802241])
+        booster: BoostRegressor = BoostRegressor(False)
+        resdict = booster.predict(self.code) #boostregressor 생성해서 코드에 맞게 예상수익률 산출
+        resarr = []
+        for i in self.code:
+            resarr.append(resdict[i]) #코드 순서에 맞게 예쁘게 배열
+        Q = np.array(resarr)
         P = np.eye(len(self.code))
         return [Q,P]
 if __name__ == "__main__":
