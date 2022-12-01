@@ -2,8 +2,11 @@ from DataCollect import DataCollector
 import pandas as pd
 import lightgbm as lgb
 import numpy as np
+
+from PredictModel.PredictInterface import PredictorInterface
+
 MODELNAME = "LightGBM.boostregressor"
-class BoostRegressor:
+class BoostRegressor(PredictorInterface):
     def __init__(self,isload = False):
         try:
             if isload:

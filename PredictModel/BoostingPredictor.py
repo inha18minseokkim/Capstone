@@ -2,8 +2,11 @@ from DataCollect import DataCollector
 import pandas as pd
 import lightgbm as lgb
 import numpy as np
+
+from PredictModel.PredictInterface import PredictorInterface
+
 MODELNAME = "LightGBM.booster"
-class Booster:
+class Booster(PredictorInterface):
     def categorize(self,earning, q1, q2, q3, q4):
         if earning < q1: return 1
         if earning < q2: return 2
