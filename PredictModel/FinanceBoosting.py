@@ -1,7 +1,7 @@
-from PredictModel.PredictInterface import PredictorInterface
+from PredictModel.BoostingRegrssor import BoostRegressor
 import lightgbm as lgb
 MODELNAME = 'FinanceBooster'
-class FinanceBooster(PredictorInterface):
+class FinanceBooster(BoostRegressor):
 
     def saveCurModel(self):
         self.model.save_model(MODELNAME)
