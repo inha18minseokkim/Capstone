@@ -12,10 +12,33 @@ class FinanceBooster(BoostRegressor):
         return lgb.Booster(model_file=MODELNAME)
 
     def predict(self, code: list):
-        pass
+        dc = DataCollector()
+        fc = FinanceCrawl()
+        prices = dc.getPriceList(code)
+        tmprice = prices.iloc[-60:]
+        tdaily = (tmprice - tmprice.shift(10)) / tmprice.shift(10)
+        tweekly = (tmprice - tmprice.shift(20)) / tmprice.shift(20)
+        tmonthly = (tmprice - tmprice.shift(40)) / tmprice.shift(40)
+        tmpsample = pd.concat([tdaily.iloc[-1], tweekly.iloc[-1], tmonthly.iloc[-1]], axis=1)
+        curmonth = tdaily.index[0].month
+        if curmonth >= 1 and curmonth <= 3: targetdate = pd.Timestamp(year=tdaily.index[0].year, month=3, day=1)
+        if curmonth >= 4 and curmonth <= 6: targetdate = pd.Timestamp(year=tdaily.index[0].year, month=6, day=1)
+        if curmonth >= 7 and curmonth <= 9: targetdate = pd.Timestamp(year=tdaily.index[0].year, month=9, day=1)
+        if curmonth >= 10 and curmonth <= 12: targetdate = pd.Timestamp(year=tdaily.index[0].year, month=12, day=1)
+        print(curmonth)
+        financedf = pd.DataFrame([],columns=fc.columns)
+        for c in tmpsample.index:
+            tmpdata = fc.getFinanceInfo(c).loc[targetdate]
+            financedf.loc[c] = tmpdata
+        tmpsample = pd.concat([tmpsample,financedf],axis=1)
+        tmpsample.columns = ["daily", "weekly", "monthly"] + fc.columns
+        print(tmpsample)
+
+        res = self.model.predict(tmpsample)
+        print(res)
+        return self.getRes(code, res)
 
     def manipulateDataSet(self, prices):
-        fc = FinanceCrawl()
         daily_shift = (prices - prices.shift(10)) / prices.shift(10)
         weekly_shift = (prices - prices.shift(20)) / prices.shift(20)
         monthly_shift = (prices - prices.shift(40)) / prices.shift(40)  # 일 주 월별로 수익률 구한다
@@ -52,11 +75,12 @@ class FinanceBooster(BoostRegressor):
         df = pd.concat(li).reset_index().drop(columns=['index'])
         df.dropna(inplace=True)
         print(df)
-        trainset = lgb.Dataset(df.iloc[:-30].loc[:, ['daily', 'weekly', 'monthly']].to_numpy(),
+        trainset = lgb.Dataset(df.iloc[:-30].loc[:, df.columns.drop('label')].to_numpy(),
                                df.iloc[:-30].loc[:, ['label']].to_numpy())
-        testset = lgb.Dataset(df.iloc[-30:].loc[:, ['daily', 'weekly', 'monthly']].to_numpy(),
+        testset = lgb.Dataset(df.iloc[-30:].loc[:, df.columns.drop('label')].to_numpy(),
                               df.iloc[-30:].loc[:, ['label']].to_numpy())
         return [trainset, testset]
 
 if __name__ == "__main__":
     fb = FinanceBooster()
+    print(fb.predict(['055550','003550','009200','005930','024110']))
