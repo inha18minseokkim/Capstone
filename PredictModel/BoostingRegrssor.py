@@ -65,5 +65,5 @@ class BoostRegressor(PredictorInterface):
         model = lgb.train(params, trainset, 1000, testset, verbose_eval=100, early_stopping_rounds=100)
         return model
 if __name__ == "__main__":
-    booster: BoostRegressor = BoostRegressor(False)
+    booster: BoostRegressor = BoostRegressor()
     print(booster.predict(['055550','003550','009200','005930','024110']))
