@@ -27,7 +27,10 @@ class BoostRegressor(PredictorInterface):
         tmonthly = (tmprice - tmprice.shift(40)) / tmprice.shift(40)
         tmpsample = pd.concat([tdaily.iloc[-1], tweekly.iloc[-1], tmonthly.iloc[-1]], axis=1)
         tmpsample.columns = ["daily", "weekly", "monthly"]
-        return self.getRes(code,self.model.predict(tmpsample))
+        print(tmpsample)
+        res = self.model.predict(tmpsample)
+        print(res)
+        return self.getRes(code,res)
 
 
     def loadDataSet(self, code):
