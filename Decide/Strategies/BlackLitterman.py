@@ -36,8 +36,8 @@ class BlackLittermanStrategy(Decide.Decider.DecisionMaker):
         w_hat = inv(self.rtncorr).dot(ER)
         w_hat = pd.Series(w_hat / w_hat.sum(), index=self.code)
         print(w_hat,np.sum(w_hat))
-        w_hat -= np.min(w_hat)
-        w_hat /= np.sum(w_hat)
+        #w_hat -= np.min(w_hat)
+        #w_hat /= np.sum(w_hat)
         print(w_hat,np.sum(w_hat))
         return w_hat
     def process(self):
@@ -48,6 +48,6 @@ class BlackLittermanStrategy(Decide.Decider.DecisionMaker):
         return res
 
 if __name__ == "__main__":
-    bls = BlackLittermanStrategy( ['055550','003550','009200','000990','031440','005930','105560','042700'], 60)
+    bls = BlackLittermanStrategy( ['055550','003550','009200','000990','031440','009150','024110'], 60)
     print(bls.w_mkt)
     print(bls.process())
