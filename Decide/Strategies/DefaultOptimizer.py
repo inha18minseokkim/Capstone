@@ -25,5 +25,5 @@ class DefaultOptimize(Decide.Decider.DecisionMaker):
             res[self.code[i]] = ratio[i]
         return res
 if __name__ == "__main__":
-    do = DefaultOptimize(['005930','091170','003550','009200','261240','097950'],60)
+    do = DefaultOptimize(['055550','003550','009200','000990','031440','009150','024110'], 60)
     print(do.process())
