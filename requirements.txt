@@ -6,3 +6,5 @@ scipy
 uvicorn
 nest_asyncio
 lightgbm
+fastapi
+pydantic
